@@ -10,7 +10,8 @@
                  [ring/ring-jetty-adapter "1.2.0"]
                  [cheshire "5.7.0"]
                  [com.stuartsierra/component "0.2.3"]
-                 [org.clojure/tools.logging "0.4.0"]]
+                 [org.clojure/tools.logging "0.4.0"]
+                 [com.novemberain/monger "3.1.0"]]
   :source-paths ["src"]
   :global-vars {*warn-on-reflection* true}
   :manifest {"Project-Name" ~#(:name %)

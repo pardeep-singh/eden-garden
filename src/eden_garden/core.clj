@@ -6,7 +6,8 @@
             [com.stuartsierra.component :as csc]
             [eden-garden.components :as ec]
             [eden-garden.http-util :as ehu]
-            [eden-garden.middleware :as em]))
+            [eden-garden.middleware :as em]
+            [eden-garden.handlers.products :as eghp]))
 
 
 (defonce ^{:doc "Server system representing HTTP server."}
@@ -15,20 +16,25 @@
 
 (defn app-routes
   "Returns the APP routes and injects the dependency required by routes."
-  []
+  [mongo-conn]
   (cc/routes
    
    (GET "/ping" [] (ehu/ok {:ping "PONG"}))
 
    (GET "/hello" [] (ehu/ok {:message "Hello World from Clojure."}))
 
+   (context "/products" []
+            (GET "/" []
+                 (ehu/ok (eghp/list-products mongo-conn))))
+
    (route/not-found "Not Found")))
 
 
 (defn app
   "Constructs routes wrapped by middlewares."
-  []
-  (-> (app-routes)
+  [mongo-conn]
+  (ctl/info mongo-conn)
+  (-> (app-routes mongo-conn)
       em/wrap-exceptions
       em/log-requests))
 
@@ -49,10 +55,14 @@
 
 (defn construct-system
   [configs]
-  (let [routes-comp (ec/map->Routes {:app app})
+  (let [mongo-conn (ec/map->Mongo {:host "shiva.local"
+                                   :port 27017})
+        routes-comp (ec/map->Routes {:app app})
         http-server-comp (ec/map->HttpServer {:port (:port configs)})]
     (csc/system-map
-     :routes routes-comp
+     :mongo mongo-conn
+     :routes (csc/using routes-comp
+                        [:mongo])
      :http-server (csc/using http-server-comp
                              [:routes]))))
 
