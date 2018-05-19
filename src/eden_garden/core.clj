@@ -33,7 +33,6 @@
 (defn app
   "Constructs routes wrapped by middlewares."
   [mongo-conn]
-  (ctl/info mongo-conn)
   (-> (app-routes mongo-conn)
       em/wrap-exceptions
       em/log-requests))
