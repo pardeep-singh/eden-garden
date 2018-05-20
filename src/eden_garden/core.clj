@@ -3,6 +3,9 @@
   (:require [clojure.tools.logging :as ctl]
             [compojure.core :as cc :refer [context defroutes POST GET PUT DELETE]]
             [compojure.route :as route]
+            [ring.middleware.keyword-params :refer [wrap-keyword-params]]
+            [ring.middleware.params :refer [wrap-params]]
+            [ring.middleware.json :refer [wrap-json-params]]
             [com.stuartsierra.component :as csc]
             [eden-garden.components :as ec]
             [eden-garden.http-util :as ehu]
@@ -24,8 +27,8 @@
    (GET "/hello" [] (ehu/ok {:message "Hello World from Clojure."}))
 
    (context "/products" []
-            (GET "/" []
-                 (ehu/ok (eghp/list-products mongo-conn))))
+            (GET "/" {m :params}
+                 (ehu/ok (eghp/list-products mongo-conn m))))
 
    (route/not-found "Not Found")))
 
@@ -34,6 +37,8 @@
   "Constructs routes wrapped by middlewares."
   [mongo-conn]
   (-> (app-routes mongo-conn)
+      wrap-keyword-params
+      wrap-params
       em/wrap-exceptions
       em/log-requests))
 
