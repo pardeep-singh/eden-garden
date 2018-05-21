@@ -8,19 +8,36 @@
    :details :price_history :average_reviews :pricing])
 
 
-;; filter products by tags
-;; filter products by retail price(range query)
-;; filter products by sale price(range query)
-;; filter products by avg reviews (range query)
+(defn transform-range-query
+  [{:keys [gte lte eq]}]
+  (merge {}
+         (when gte
+           {:$gte gte})
+         (when lte
+           {:$lte lte})
+         (when eq
+           {:$eq eq})))
+
+
 (defn construct-query
-  [{:keys [tags]
-    :as query
-    :or {tags []}}]
+  [{:keys [tags retail_price sale_price average_reviews]
+    :as query}]
   (merge {}
          (when (seq tags)
-           {:tags {:$in (cc/parse-string tags)}})))
+           {:tags {:$in (cc/parse-string tags)}})
+         (when (seq retail_price)
+           {:pricing.retail (transform-range-query (cc/parse-string retail_price
+                                                                    true))})
+         (when (seq sale_price)
+           {:pricing.sale (transform-range-query (cc/parse-string sale_price
+                                                                  true))})
+         (when (seq average_reviews)
+           {:average_reviews (transform-range-query (cc/parse-string average_reviews
+                                                                     true))})))
 
 
+;; Add pagination parameters
+;; Add field to specify fields in response
 (defn list-products
   [mongo-conn params]
   (let [products-db (egm/get-db (:mongo-conn mongo-conn)
