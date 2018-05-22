@@ -36,17 +36,25 @@
                                                                      true))})))
 
 
-;; Add pagination parameters
-;; Add field to specify fields in response
+;; Add sorting params
 (defn list-products
-  [mongo-conn params]
+  [mongo-conn {:keys [page page-size]
+               :as params
+               :or {page "0"
+                    page-size "10"}}]
   (let [products-db (egm/get-db (:mongo-conn mongo-conn)
                                 "garden")
         query (construct-query params)
+        page (Integer/parseInt page)
+        page-size (Integer/parseInt page-size)
         products (-> (egm/query products-db
                                 "products"
                                 :query query
-                                :only default-response-fields)
+                                :only default-response-fields
+                                :skip (* page page-size)
+                                :limit page-size)
                      egm/remove-id)]
-    {:products products
-     :total (count products)}))
+    {:total (count products)
+     :page page
+     :page-size page-size
+     :products products}))
