@@ -69,3 +69,11 @@
          (dissoc doc
                  :_id))
        result))
+
+
+(defn count-docs
+  [db coll & {query :query
+              :or {query {}}}]
+  (collection/count db
+                    coll
+                    query))

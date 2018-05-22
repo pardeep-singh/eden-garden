@@ -53,8 +53,11 @@
                                 :only default-response-fields
                                 :skip (* page page-size)
                                 :limit page-size)
-                     egm/remove-id)]
-    {:total (count products)
+                     egm/remove-id)
+        total (egm/count-docs products-db
+                              "products"
+                              :query query)]
+    {:total total
      :page page
      :page-size page-size
      :products products}))
