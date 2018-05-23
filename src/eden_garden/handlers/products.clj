@@ -36,28 +36,49 @@
                                                                      true))})))
 
 
-;; Add sorting params
+(defonce sort-field-mappings
+  {"average_reviews" "average_reviews"
+   "retail_price" "pricing.retail"
+   "sale_price" "pricing.sale"})
+
+
+(defonce sort-order-mappings
+  {"asc" 1
+   "desc" -1})
+
+
+(defn construct-sorting-value
+  [sort-field sort-order]
+  (let [coerced-sort-field (sort-field-mappings sort-field)
+        coerced-sort-order (sort-order-mappings sort-order)]
+    {coerced-sort-field coerced-sort-order}))
+
+
 (defn list-products
-  [mongo-conn {:keys [page page-size]
+  [mongo-conn {:keys [page page_size sort_by sort_order]
                :as params
                :or {page "0"
-                    page-size "10"}}]
+                    page_size "10"
+                    sort_by "average_reviews"
+                    sort_order "asc"}}]
   (let [products-db (egm/get-db (:mongo-conn mongo-conn)
                                 "garden")
         query (construct-query params)
         page (Integer/parseInt page)
-        page-size (Integer/parseInt page-size)
+        page-size (Integer/parseInt page_size)
+        sorting-value (construct-sorting-value sort_by sort_order)
         products (-> (egm/query products-db
                                 "products"
                                 :query query
                                 :only default-response-fields
                                 :skip (* page page-size)
-                                :limit page-size)
+                                :limit page-size
+                                :sort sorting-value)
                      egm/remove-id)
         total (egm/count-docs products-db
                               "products"
                               :query query)]
     {:total total
      :page page
-     :page-size page-size
+     :page_size page-size
      :products products}))

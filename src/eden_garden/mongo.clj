@@ -42,18 +42,18 @@
 
 (defn query
   [db coll & {query :query
-              sort-by :sort-by
+              sort :sort
               limit :limit
               only :only
               skip :skip
-              :or {sort-by {}
+              :or {sort {}
                    only []
                    skip 0
                    limit 10
                    query {}}}]
   (let [empty-query (mq/empty-query (.getCollection ^DB db coll))
         constructed-query {:query query
-                           :sort sort-by
+                           :sort sort
                            :fields only
                            :limit limit
                            :skip skip}
