@@ -77,3 +77,16 @@
   (collection/count db
                     coll
                     query))
+
+
+(defn insert
+  [db coll record]
+  (collection/insert db
+                     coll
+                     record))
+
+(defn insert-and-return
+  [db coll record]
+  (collection/insert-and-return db
+                                coll
+                                record))

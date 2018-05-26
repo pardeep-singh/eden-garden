@@ -28,7 +28,10 @@
 
    (context "/products" []
             (GET "/" {m :params}
-                 (ehu/ok (eghp/list-products mongo-conn m))))
+                 (ehu/ok (eghp/list-products mongo-conn m)))
+
+            (POST "/" {m :params}
+                  (ehu/created (eghp/add-product mongo-conn m))))
 
    (route/not-found "Not Found")))
 
@@ -39,6 +42,7 @@
   (-> (app-routes mongo-conn)
       wrap-keyword-params
       wrap-params
+      wrap-json-params
       em/wrap-exceptions
       em/log-requests))
 

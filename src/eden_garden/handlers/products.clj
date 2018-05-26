@@ -82,3 +82,14 @@
      :page page
      :page_size page-size
      :products products}))
+
+
+(defn add-product
+  [mongo-conn zmap]
+  (let [products-db (egm/get-db (:mongo-conn mongo-conn)
+                                "garden")
+        doc (egm/insert-and-return products-db
+                                   "products"
+                                   zmap)]
+    (dissoc doc
+            :_id)))
