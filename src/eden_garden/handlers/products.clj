@@ -20,7 +20,7 @@
 
 
 (defn construct-query
-  [{:keys [tags retail_price sale_price average_reviews]
+  [{:keys [tags retail_price sale_price]
     :as query}]
   (merge {}
          (when (seq tags)
@@ -30,15 +30,11 @@
                                                                     true))})
          (when (seq sale_price)
            {:pricing.sale (transform-range-query (cc/parse-string sale_price
-                                                                  true))})
-         (when (seq average_reviews)
-           {:average_reviews (transform-range-query (cc/parse-string average_reviews
-                                                                     true))})))
+                                                                  true))})))
 
 
 (defonce sort-field-mappings
-  {"average_reviews" "average_reviews"
-   "retail_price" "pricing.retail"
+  {"retail_price" "pricing.retail"
    "sale_price" "pricing.sale"})
 
 
@@ -59,7 +55,7 @@
                :as params
                :or {page "0"
                     page_size "10"
-                    sort_by "average_reviews"
+                    sort_by "sale_price"
                     sort_order "asc"}}]
   (let [products-db (egm/get-db (:mongo-conn mongo-conn)
                                 "garden")
