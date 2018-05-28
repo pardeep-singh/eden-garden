@@ -1,6 +1,7 @@
 (ns eden-garden.handlers.products
   (:require [cheshire.core :as cc]
-            [eden-garden.mongo :as egm]))
+            [eden-garden.mongo :as egm])
+  (:import java.util.UUID))
 
 
 (defonce default-response-fields
@@ -84,8 +85,10 @@
   [mongo-conn zmap]
   (let [products-db (egm/get-db (:mongo-conn mongo-conn)
                                 "garden")
+        product-id (.toString (UUID/randomUUID))
         doc (egm/insert-and-return products-db
                                    "products"
-                                   zmap)]
+                                   (assoc zmap
+                                          :id product-id))]
     (dissoc doc
             :_id)))
