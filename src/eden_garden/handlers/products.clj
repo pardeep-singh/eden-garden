@@ -5,7 +5,7 @@
 
 
 (defonce default-response-fields
-  [:description :slug :tags :name :totol_reviews :sku
+  [:id :description :slug :tags :name :totol_reviews :sku
    :details :price_history :average_reviews :pricing])
 
 
