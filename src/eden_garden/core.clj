@@ -31,7 +31,10 @@
                  (ehu/ok (eghp/list-products mongo-conn m)))
 
             (POST "/" {m :params}
-                  (ehu/created (eghp/add-product mongo-conn m))))
+                  (ehu/created (eghp/add-product mongo-conn m)))
+
+            (PUT "/:id" {m :params}
+                 (ehu/ok (eghp/update-product mongo-conn m))))
 
    (route/not-found "Not Found")))
 

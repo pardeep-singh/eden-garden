@@ -92,3 +92,32 @@
                                           :id product-id))]
     (dissoc doc
             :_id)))
+
+
+(defn fetch-product
+  [products-db id]
+  (-> (egm/find-one products-db
+                    "products"
+                    {:id id}
+                    :only [:name :description
+                           :tags :pricing])
+      (dissoc :_id)))
+
+
+(defn update-product
+  [mongo-conn zmap]
+  (let [products-db (egm/get-db (:mongo-conn mongo-conn)
+                                "garden")
+        product (fetch-product products-db
+                               (:id zmap))
+        tags (into (:tags product)
+                   (:tags zmap))
+        updated-product (merge product
+                               zmap
+                               (when (seq tags)
+                                 {:tags (set tags)}))]
+    (egm/update-doc products-db
+                    "products"
+                    {:id (:id zmap)}
+                    updated-product)
+    updated-product))

@@ -90,3 +90,20 @@
   (collection/insert-and-return db
                                 coll
                                 record))
+
+
+(defn find-one
+  [db coll query & {only :only
+                    :or {only []}}]
+  (collection/find-one-as-map db
+                              coll
+                              query
+                              only))
+
+
+(defn update-doc
+  [db coll query doc]
+  (collection/update db
+                     coll
+                     query
+                     doc))
