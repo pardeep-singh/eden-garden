@@ -104,6 +104,7 @@
       (dissoc :_id)))
 
 
+;; Throw Not found exception when product with given ID is not found
 (defn update-product
   [mongo-conn zmap]
   (let [products-db (egm/get-db (:mongo-conn mongo-conn)
@@ -121,3 +122,13 @@
                     {:id (:id zmap)}
                     updated-product)
     updated-product))
+
+
+;; Throw Not found exception when product with given ID is not found
+(defn get-product
+  [mongo-conn {:keys [id]}]
+  (let [products-db (egm/get-db (:mongo-conn mongo-conn)
+                                "garden")
+        product (fetch-product products-db
+                               id)]
+    product))
