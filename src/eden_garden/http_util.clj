@@ -1,5 +1,9 @@
 (ns eden-garden.http-util
-  (:require [cheshire.core :as cc]))
+  (:require [cheshire.core :as cc]
+            [slingshot.slingshot :refer [try+ throw+]]))
+
+
+(defrecord HTTPError [type status msg data])
 
 
 (defn json-response
@@ -26,3 +30,23 @@
   [message]
   (json-response {:error message}
                  :status 500))
+
+
+(defn not-found-exception
+  [msg]
+  (HTTPError. ::not-found
+              404
+              msg
+              nil))
+
+
+(defn not-found
+  [message]
+  (json-response {:error message}
+                 :status 404))
+
+
+(defn http-error
+  [{:keys [status] :as response}]
+  (json-response response
+                 :status status))

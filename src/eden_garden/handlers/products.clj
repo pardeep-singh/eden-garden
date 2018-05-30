@@ -1,6 +1,8 @@
 (ns eden-garden.handlers.products
   (:require [cheshire.core :as cc]
-            [eden-garden.mongo :as egm])
+            [eden-garden.mongo :as egm]
+            [slingshot.slingshot :refer [throw+]]
+            [eden-garden.http-util :refer [not-found-exception]])
   (:import java.util.UUID))
 
 
@@ -96,15 +98,17 @@
 
 (defn fetch-product
   [products-db id]
-  (-> (egm/find-one products-db
-                    "products"
-                    {:id id}
-                    :only [:name :description
-                           :tags :pricing])
-      (dissoc :_id)))
+  (if-let [product (egm/find-one products-db
+                                 "products"
+                                 {:id id}
+                                 :only [:name :description
+                                        :tags :pricing])]
+    (dissoc product
+            :_id)
+    (throw+ (not-found-exception (format "Product with %s is not found"
+                                         id)))))
 
 
-;; Throw Not found exception when product with given ID is not found
 (defn update-product
   [mongo-conn zmap]
   (let [products-db (egm/get-db (:mongo-conn mongo-conn)

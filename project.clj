@@ -12,7 +12,8 @@
                  [com.stuartsierra/component "0.2.3"]
                  [org.clojure/tools.logging "0.4.0"]
                  [com.novemberain/monger "3.1.0"]
-                 [ring/ring-json "0.4.0"]]
+                 [ring/ring-json "0.4.0"]
+                 [slingshot "0.10.3"]]
   :source-paths ["src"]
   :global-vars {*warn-on-reflection* true}
   :manifest {"Project-Name" ~#(:name %)

@@ -1,17 +1,22 @@
 (ns eden-garden.middleware
   (:require [eden-garden.http-util :as ehu]
-            [clojure.tools.logging :as ctl]))
+            [clojure.tools.logging :as ctl]
+            [slingshot.slingshot :refer [try+]]))
 
 
 (defn wrap-exceptions
   [handler]
   (fn [req]
-    (try
-      (handler req)
-      (catch Exception exception
-        (ctl/error exception
-                   "Internal Server Error")
-        (ehu/internal-server-error "Internal Server Error")))))
+    (try+
+     (handler req)
+     (catch eden_garden.http_util.HTTPError http-exception
+       (ctl/error http-exception
+                  "HTTP Exception")
+       (ehu/http-error http-exception))
+     (catch Exception exception
+       (ctl/error exception
+                  "Internal Server Error")
+       (ehu/internal-server-error "Internal Server Error")))))
 
 
 (defn log-requests
