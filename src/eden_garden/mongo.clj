@@ -3,17 +3,40 @@
             [monger.collection :as collection]
             [monger.query :as mq])
   (:import [com.mongodb
-            DB]))
+            DB
+            WriteConcern]))
 
 
-(defn init
-  [{:keys [host port]
-    :as config}]
-  {:pre [(seq host)
-         (integer? port)]}
+(def default-options
+  {:read-preference (com.mongodb.ReadPreference/secondaryPreferred)
+   :auto-connect-retry true
+   :socket-timeout 10000
+   :connect-timeout 10000
+   :write-concern WriteConcern/W1})
+
+
+(defmulti init
+  (fn [conn-type _]
+    (keyword conn-type)))
+
+
+(defmethod init :direct
+  [_ {:keys [host port]}]
   (let [conn (mongo/connect {:host host
                              :port port})]
     conn))
+
+
+(defmethod init :replica-set
+  [_ {:keys [servers opts]
+      :or {opts default-options}}]
+  (let [options (mongo/mongo-options opts)
+        servers-address (map (fn [{:keys [host port]}]
+                               (mongo/server-address host
+                                                     port))
+                             servers)]
+    (mongo/connect servers-address
+                   options)))
 
 
 (defn disconnect

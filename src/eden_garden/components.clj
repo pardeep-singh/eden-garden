@@ -12,8 +12,9 @@
     (if (nil? mongo-conn)
       (do
         (ctl/info "Starting Mongo Client Component")
-        (let [conn (mongo/init {:host host
-                                :port port})]
+        (let [conn (mongo/init "replica-set"
+                               {:servers [{:host host
+                                           :port port}]})]
           (assoc this
                  :mongo-conn conn)))
       (do
