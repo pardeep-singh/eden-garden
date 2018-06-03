@@ -40,6 +40,14 @@
               nil))
 
 
+(defn bad-request
+  [msg]
+  (HTTPError. ::bad-request
+              400
+              msg
+              nil))
+
+
 (defn not-found
   [message]
   (json-response {:error message}
