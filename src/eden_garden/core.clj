@@ -10,7 +10,8 @@
             [eden-garden.components :as ec]
             [eden-garden.http-util :as ehu]
             [eden-garden.middleware :as em]
-            [eden-garden.handlers.products :as eghp]))
+            [eden-garden.handlers.products :as eghp]
+            [eden-garden.handlers.apis :as eha]))
 
 
 (defonce ^{:doc "Server system representing HTTP server."}
@@ -37,7 +38,7 @@
                  (ehu/ok (eghp/update-product mongo-conn m)))
 
             (GET "/:id" {m :params}
-                 (ehu/ok (eghp/get-product mongo-conn m))))
+                 (ehu/ok (eha/get-product mongo-conn m))))
 
    (route/not-found "Not Found")))
 

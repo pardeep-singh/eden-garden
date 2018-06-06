@@ -16,7 +16,8 @@
                  [slingshot "0.10.3"]
                  [clojure-future-spec "1.9.0-alpha15"
                   :exclusions [org.clojure/clojure]]
-                 [org.clojure/test.check "0.9.0"]]
+                 [org.clojure/test.check "0.9.0"]
+                 [prismatic/schema "1.1.9"]]
   :source-paths ["src"]
   :global-vars {*warn-on-reflection* true}
   :manifest {"Project-Name" ~#(:name %)

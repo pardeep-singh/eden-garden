@@ -2,9 +2,10 @@
   (:require [clojure.spec :as s]
             [clojure.spec.gen :as gen]
             [eden-garden.handlers.products :as edhp]
-            [eden-garden.handlers.products :as eghp]
             [slingshot.slingshot :refer [throw+]]
-            [eden-garden.http-util :refer [bad-request]]))
+            [eden-garden.http-util :refer [bad-request]]
+            [eden-garden.handlers.schema :as ehs]
+            [eden-garden.handlers.products :as eghp]))
 
 
 (s/def ::id string?)
@@ -21,3 +22,10 @@
     (eghp/get-product mongo-conn
                       params)
     (throw+ (bad-request "Invalid Request"))))
+
+
+(defn get-product
+  [mongo-conn params]
+  (->> params
+       ehs/coerce-get-product-request
+       (eghp/get-product mongo-conn)))
