@@ -32,10 +32,10 @@
                  (ehu/ok (eghp/list-products mongo-conn m)))
 
             (POST "/" {m :params}
-                  (ehu/created (eghp/add-product mongo-conn m)))
+                  (ehu/created (eha/add-product mongo-conn m)))
 
             (PUT "/:id" {m :params}
-                 (ehu/ok (eghp/update-product mongo-conn m)))
+                 (ehu/ok (eha/update-product mongo-conn m)))
 
             (GET "/:id" {m :params}
                  (ehu/ok (eha/get-product mongo-conn m))))
