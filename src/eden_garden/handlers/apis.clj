@@ -43,3 +43,10 @@
   (->> params
        ehs/coerce-update-product-request
        (eghp/update-product mongo-conn)))
+
+
+(defn get-products
+  [mongo-conn params]
+  (->> params
+       ehs/coerce-get-products-request
+       (eghp/list-products mongo-conn)))

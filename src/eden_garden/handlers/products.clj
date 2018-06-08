@@ -27,13 +27,11 @@
     :as query}]
   (merge {}
          (when (seq tags)
-           {:tags {:$in (cc/parse-string tags)}})
+           {:tags {:$in tags}})
          (when (seq retail_price)
-           {:pricing.retail (transform-range-query (cc/parse-string retail_price
-                                                                    true))})
+           {:pricing.retail (transform-range-query retail_price)})
          (when (seq sale_price)
-           {:pricing.sale (transform-range-query (cc/parse-string sale_price
-                                                                  true))})))
+           {:pricing.sale (transform-range-query sale_price)})))
 
 
 (defonce sort-field-mappings
@@ -56,22 +54,20 @@
 (defn list-products
   [mongo-conn {:keys [page page_size sort_by sort_order]
                :as params
-               :or {page "0"
-                    page_size "10"
+               :or {page 0
+                    page_size 10
                     sort_by "sale_price"
                     sort_order "asc"}}]
   (let [products-db (egm/get-db (:mongo-conn mongo-conn)
                                 "garden")
         query (construct-query params)
-        page (Integer/parseInt page)
-        page-size (Integer/parseInt page_size)
         sorting-value (construct-sorting-value sort_by sort_order)
         products (-> (egm/query products-db
                                 "products"
                                 :query query
                                 :only default-response-fields
-                                :skip (* page page-size)
-                                :limit page-size
+                                :skip (* page page_size)
+                                :limit page_size
                                 :sort sorting-value)
                      egm/remove-id)
         total (egm/count-docs products-db
@@ -79,7 +75,7 @@
                               :query query)]
     {:total total
      :page page
-     :page_size page-size
+     :page_size page_size
      :products products}))
 
 
