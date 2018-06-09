@@ -1,6 +1,14 @@
 (ns eden-garden.handlers.schema
-  (:require [schema.core :as s]
-            [schema.coerce :as scoerce]))
+  (:require [schema.coerce :as scoerce]
+            [schema.core :as s]
+            [cheshire.core :as cc]))
+
+
+(def json-coercion-matcher-maker (fn [schemas]
+                                   (fn [schema]
+                                     (when (schemas schema)
+                                       (fn [s]
+                                         (cc/parse-string s keyword))))))
 
 
 (s/defschema GetProductRequest
@@ -25,12 +33,16 @@
    (s/optional-key :eq) s/Int})
 
 
+(s/defschema Tags
+  (s/constrained [s/Str] seq))
+
+
 (s/defschema GetProductsRequest
   {(s/optional-key :page) s/Int
    (s/optional-key :page_size) s/Int
    (s/optional-key :sort_by) s/Str
    (s/optional-key :sort_order) s/Str
-   (s/optional-key :tags) [s/Str]
+   (s/optional-key :tags) Tags
    (s/optional-key :retail_price) PriceQuery
    (s/optional-key :sale_price) PriceQuery})
 
@@ -59,9 +71,17 @@
   (scoerce/json-coercion-matcher schema))
 
 
+(def get-products-json-schemas #{Tags PriceQuery})
+
+
+(def get-products-coercion-matchers
+  (json-coercion-matcher-maker get-products-json-schemas))
+
+
 (defn get-products-request-matchers
   [schema]
-  (scoerce/json-coercion-matcher schema))
+  (or (get-products-coercion-matchers schema)
+      (scoerce/string-coercion-matcher schema)))
 
 
 (def coerce-get-product-request

@@ -1,10 +1,8 @@
 (ns eden-garden.handlers.products
-  (:require [cheshire.core :as cc]
+  (:require [eden-garden.http-util :refer [not-found-exception]]
             [eden-garden.mongo :as egm]
-            [slingshot.slingshot :refer [throw+]]
-            [eden-garden.http-util :refer [not-found-exception]])
+            [slingshot.slingshot :refer [throw+]])
   (:import java.util.UUID))
-
 
 (defonce default-response-fields
   [:id :description :slug :tags :name :totol_reviews :sku
