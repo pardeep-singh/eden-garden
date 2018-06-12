@@ -9,6 +9,10 @@
   (fn [req]
     (try+
      (handler req)
+     (catch clojure.lang.ExceptionInfo e
+       (ctl/error e
+                  {:invalid-data (:error (ex-data e))})
+       (ehu/bad-request {:invalid-keys (keys (:error (ex-data e)))}))
      (catch eden_garden.http_util.HTTPError http-exception
        (ctl/error http-exception
                   "HTTP Exception")

@@ -42,10 +42,8 @@
 
 (defn bad-request
   [msg]
-  (HTTPError. ::bad-request
-              400
-              msg
-              nil))
+  (json-response msg
+                 :status 400))
 
 
 (defn not-found
