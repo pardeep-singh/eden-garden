@@ -1,0 +1,91 @@
+{
+	"variables": [],
+	"info": {
+		"name": "eden garden",
+		"_postman_id": "e2f6e9c2-bbcc-b9f7-a5cc-38d1bd6bb59b",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get products",
+			"request": {
+				"url": "http://localhost:9099/products/?tags=[\"soil\"]&retail_price={\"gte\":580000, \"lte\":590000}&sale_price={\"gte\":480000, \"lte\":490000}&page=0&page_size=10&sort_by=sale_price&sort_order=desc",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Add product",
+			"request": {
+				"url": "http://localhost:9099/products/",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"description\": \"Garden\",\n    \"tags\":[\"tools\", \"gardening\"],\n    \"name\": \"Garden Garden\",\n    \"pricing\":{\n        \"retail\":589700,\n        \"sale\":489700\n    }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update product",
+			"request": {
+				"url": "http://localhost:9099/products/bf860113-e113-4db1-93e7-da472683cf8e",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"description\": \"Garden\",\n    \"tags\":[\"2\", \"3\", \"31\"],\n    \"name\": \"Garden Garden\",\n    \"pricing\":{\n        \"retail\":589711,\n        \"sale\":489700\n    }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch a product",
+			"request": {
+				"url": "http://localhost:9099/products/32187e1f-fd00-4f99-a34d-c45693f297b0",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"description\": \"Garden\",\n    \"tags\":[\"2\", \"3\", \"31\"],\n    \"name\": \"Garden Garden\",\n    \"pricing\":{\n        \"retail\":\"589711\",\n        \"sale\":\"489700\"\n    }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
