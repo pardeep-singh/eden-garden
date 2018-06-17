@@ -1,5 +1,5 @@
 (defproject eden-garden "0.1.0-SNAPSHOT"
-  :description "REST API Service exposing APIs for Ecommerce APP for selling garden products."
+  :description "REST API Service exposing Product CRUD APIs on top of Replica Set MongoDB Cluster."
   :url "http://example.com/FIXME"
   :license {:name "Proprietary"}
   :uberjar-exclusions [#"(?i)^META-INF/[^/]*\.(SF|RSA)$"]
