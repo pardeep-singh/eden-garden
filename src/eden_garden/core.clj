@@ -70,7 +70,7 @@
 
 (defn construct-system
   [configs]
-  (let [mongo-conn (ec/map->Mongo {:host "192.168.33.21"
+  (let [mongo-conn (ec/map->Mongo {:host "mongodb-cluster"
                                    :port 40001})
         routes-comp (ec/map->Routes {:app app})
         http-server-comp (ec/map->HttpServer {:port (:port configs)})]
