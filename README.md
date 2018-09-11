@@ -1,4 +1,4 @@
-# Product CURD APIs service written in Clojure using MongoDB Replica Set Cluster
+# Product CRUD APIs service written in Clojure using MongoDB Replica Set Cluster
 
 REST API service to Add, Update, Fetch and Query products from MongoDB Replica Set Cluster. This is based on Ecommerce Application example from
 [MongoDB in Action](https://www.manning.com/books/mongodb-in-action) book.
