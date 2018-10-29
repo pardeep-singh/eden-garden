@@ -2,13 +2,12 @@
   (:require [monger.core :as mongo]
             [monger.collection :as collection]
             [monger.query :as mq])
-  (:import [com.mongodb
-            DB
-            WriteConcern]))
+  (:import [com.mongodb DB WriteConcern TagSet Tag Tag]))
 
 
 (def default-options
-  {:read-preference (com.mongodb.ReadPreference/secondaryPreferred)
+  {:read-preference (com.mongodb.ReadPreference/secondaryPreferred (java.util.ArrayList. [(TagSet. (Tag. "type" "hidden"))
+                                                                                          (TagSet. (Tag. "type" "secondary"))]))
    :auto-connect-retry true
    :socket-timeout 10000
    :connect-timeout 10000
